@@ -18,7 +18,7 @@ class AdExecutor:
 # and returns reference user groups in JSON format
     @staticmethod
     def get_reference_user_groups(tuples):
-        if AdExecutor.tuples.is_list_of_tuples(tuples):
+        if AdExecutor.is_list_of_tuples(tuples):
             # Convert to PowerShell format: @("title","name"), ...
             ps_array = "@(" + ",".join(
                 f'@("{t[0]}", "{t[1]}")' for t in tuples
