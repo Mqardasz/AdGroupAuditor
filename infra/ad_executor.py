@@ -48,5 +48,5 @@ class AdExecutor:
 
 
 fetcher = ExcelFetcher()
-print(fetcher.rows)
-#AdExecutor.get_reference_user_groups(fetcher.rows)
+#print(fetcher.rows) this is not up to date
+AdExecutor.get_reference_user_groups(fetcher.rows)
