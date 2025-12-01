@@ -34,11 +34,10 @@ class AdExecutor:
     @staticmethod
     def get_reference_user_groups(tuples):
         if AdExecutor.is_list_of_tuples(tuples):
-            # Convert to PowerShell format: @("title","name"), ...
+            # Convert to PowerShell format: @("title","name")
             ps_array = "@(" + ",".join(
                 f'@("{t[0]}", "{t[1]}")' for t in tuples
             ) + ")"
-            print(ps_array)
             ps_cmd = f"""
             $tuples = {ps_array}
             . "{AdExecutor.resolve_scripts_path()}\\getReferenceUserGroups.ps1"
@@ -52,18 +51,35 @@ class AdExecutor:
             )
 
             # Parse JSON back into Python dict
-            groups = json.loads(result.stdout)
-            print(groups)
+            reference_user_groups = json.loads(result.stdout)
+            return reference_user_groups
         else:
-            raise Exception("Invalid list of tuples, should be: [(str,str)]")
+            raise Exception("Invalid list of tuples, should be: [(str,str), ..]")
 
-    #@staticmethod
-    #def get_all_users_groups_grouped_by_jobtitle:
+    # this function gets a list of tuples (jobtitle, name) and executes a powershell script
+    # that search for all users with given jobtitle and returns JSON with all users grouped
+    # to jobtitle and their groups
+    @staticmethod
+    def get_all_users_groups_grouped_by_jobtitle(tuples):
+        titles = [job for job, _ in tuples]
+        ps_array = "@(" + ", ".join(f"'{t}'" for t in titles) + ")"
+        ps_cmd = f"""
+        $jobtitles = {ps_array}
+        . "{AdExecutor.resolve_scripts_path()}\\getAllUsersGroupsGroupedByJobtitle.ps1"
+        Get-UsersAndGroupsFromJobtitle -JobTitles $jobtitles
+        """
 
+        result = subprocess.run(
+            ["powershell", "-Command", ps_cmd],
+            capture_output=True,
+            text=True
+        )
+
+        users_and_groups = json.loads(result.stdout)
+        print(users_and_groups)
 
 
 
 fetcher = ExcelFetcher()
-print(AdExecutor.resolve_scripts_path())
-#print(fetcher.rows) this is not up to date
 AdExecutor.get_reference_user_groups(fetcher.rows)
+AdExecutor.get_all_users_groups_grouped_by_jobtitle(fetcher.rows)
