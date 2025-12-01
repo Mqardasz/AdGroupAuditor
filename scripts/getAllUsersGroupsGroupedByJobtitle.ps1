@@ -21,7 +21,7 @@ function Get-UsersAndGroupsFromJobtitle {
         }
         else {
             foreach ($u in $users) {
-                $groups (Get-ADPrincipalGroupMembership $u.samaccountname | Select-Object -ExpandProperty Name)
+                $groups = (Get-ADPrincipalGroupMembership $u.samaccountname | Select-Object -ExpandProperty Name)
 
                 $userMap[$u.Name] = $groups
             }
@@ -30,5 +30,5 @@ function Get-UsersAndGroupsFromJobtitle {
         $output[$job] = $userMap
 
     }
-    return $output | ConvertToJson -Depth 10
+    return $output | ConvertTo-Json -Depth 10
 }

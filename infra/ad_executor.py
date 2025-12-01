@@ -74,7 +74,6 @@ class AdExecutor:
             capture_output=True,
             text=True
         )
-
         users_and_groups = json.loads(result.stdout)
         print(users_and_groups)
 
