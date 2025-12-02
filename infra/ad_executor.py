@@ -2,7 +2,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from excel_fetcher import ExcelFetcher
+from infra.excel_fetcher import ExcelFetcher
 
 class AdExecutor:
 
@@ -75,10 +75,10 @@ class AdExecutor:
             text=True
         )
         users_and_groups = json.loads(result.stdout)
-        print(users_and_groups)
+        return users_and_groups
 
 
 
-fetcher = ExcelFetcher()
-AdExecutor.get_reference_user_groups(fetcher.rows)
-AdExecutor.get_all_users_groups_grouped_by_jobtitle(fetcher.rows)
+#fetcher = ExcelFetcher()
+#AdExecutor.get_reference_user_groups(fetcher.rows)
+#AdExecutor.get_all_users_groups_grouped_by_jobtitle(fetcher.rows)
